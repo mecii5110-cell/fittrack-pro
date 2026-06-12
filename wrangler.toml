@@ -5,4 +5,4 @@ pages_build_output_dir = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "fitrank-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "01b5ba46-6092-4ada-b260-6300131ba4a2"
