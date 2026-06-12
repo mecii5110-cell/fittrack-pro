@@ -1,0 +1,7 @@
+fitrank.db
+telegram-sessions.json
+telegram-data.json
+__pycache__/
+*.pyc
+.wrangler/
+node_modules/

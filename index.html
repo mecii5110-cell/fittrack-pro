@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151f">
+  <title>FitRank OS</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="authScreen" class="auth-screen">
+    <section class="auth-visual" aria-label="FitRank">
+      <div class="brand-lockup">
+        <span class="brand-mark">FR</span>
+        <div>
+          <strong>FitRank OS</strong>
+          <small>Fitness gelişimini oyunlaştır</small>
+        </div>
+      </div>
+      <div class="rank-orbit">
+        <span>Demir</span>
+        <span>Altın</span>
+        <span>Radiant</span>
+      </div>
+    </section>
+    <section class="auth-card">
+      <div class="auth-tabs" role="tablist">
+        <button class="tab-button active" data-auth-mode="login" type="button">Giriş</button>
+        <button class="tab-button" data-auth-mode="register" type="button">Kaydol</button>
+      </div>
+      <form id="authForm" class="stack">
+        <label>
+          E-posta
+          <input id="authEmail" type="email" autocomplete="email" required placeholder="sen@example.com">
+        </label>
+        <label>
+          Şifre
+          <input id="authPassword" type="password" autocomplete="current-password" required minlength="4" placeholder="En az 4 karakter">
+        </label>
+        <button class="primary wide" type="submit">Devam et</button>
+        <p id="authMessage" class="form-message"></p>
+      </form>
+    </section>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand-lockup compact">
+        <span class="brand-mark">FR</span>
+        <div>
+          <strong>FitRank OS</strong>
+          <small id="userEmail">-</small>
+        </div>
+      </div>
+      <nav class="nav-list" aria-label="Ana menü">
+        <button class="nav-item active" data-view="dashboard" type="button"><span>⌂</span>Dashboard</button>
+        <button class="nav-item" data-view="program" type="button"><span>▦</span>Programım</button>
+        <button class="nav-item" data-view="measurements" type="button"><span>↕</span>Ölçümler</button>
+        <button class="nav-item" data-view="nutrition" type="button"><span>◌</span>Besin Takip</button>
+        <button class="nav-item" data-view="rank" type="button"><span>◆</span>Rank</button>
+        <button class="nav-item" data-view="assistant" type="button"><span>✦</span>AI Asistan</button>
+        <button class="nav-item" data-view="telegram" type="button"><span>↗</span>Telegram</button>
+      </nav>
+      <button id="logoutBtn" class="ghost wide" type="button">Çıkış yap</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel">Bugün</p>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <button id="seedBtn" class="ghost" type="button">Örnek veri</button>
+          <button id="exportBtn" class="ghost" type="button">JSON indir</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="view active">
+        <div class="metric-grid">
+          <article class="metric"><span>Rank</span><strong id="metricRank">Demir</strong><small id="metricRankScore">0 XP</small></article>
+          <article class="metric"><span>Haftalık antrenman</span><strong id="metricWorkouts">0/0</strong><small>Tamamlanan gün</small></article>
+          <article class="metric"><span>Son kilo</span><strong id="metricWeight">-</strong><small>Haftalık takip</small></article>
+          <article class="metric"><span>Bugünkü kalori</span><strong id="metricCalories">0</strong><small id="metricMacros">0P / 0K / 0Y</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Bugünkü Plan</h2>
+              <button class="tiny" data-jump="rank" type="button">Rank moduna geç</button>
+            </div>
+            <div id="todayPlan" class="workout-list"></div>
+          </section>
+          <section class="panel">
+            <h2>Gelişim Akışı</h2>
+            <div id="progressTimeline" class="timeline"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="program" class="view">
+        <div class="split">
+          <form id="programForm" class="panel form-grid">
+            <h2>Program Hareketi Ekle</h2>
+            <label>Gün<select id="programDay"></select></label>
+            <label>Bölge<input id="programArea" placeholder="Göğüs, triceps, karın" required></label>
+            <label>Hareket<input id="programExercise" placeholder="Bench press" required></label>
+            <label>Hedef set<input id="programSets" type="number" min="1" value="4" required></label>
+            <label>Hedef tekrar<input id="programReps" type="number" min="1" value="10" required></label>
+            <button class="primary" type="submit">Programa ekle</button>
+          </form>
+          <section class="panel">
+            <h2>Haftalık Program</h2>
+            <div id="programList" class="day-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="measurements" class="view">
+        <div class="split">
+          <form id="measurementForm" class="panel form-grid">
+            <h2>Vücut Ölçümü Gir</h2>
+            <label>Tarih<input id="measureDate" type="date" required></label>
+            <label>Boy (cm)<input id="measureHeight" type="number" min="80" max="240" step="0.1" required></label>
+            <label>Kilo (kg)<input id="measureWeight" type="number" min="20" max="300" step="0.1" required></label>
+            <label>Bel (cm)<input id="measureWaist" type="number" min="30" max="220" step="0.1"></label>
+            <button class="primary" type="submit">Kaydet</button>
+          </form>
+          <section class="panel">
+            <h2>Haftalık Boy / Kilo Takibi</h2>
+            <div id="measurementChart" class="chart"></div>
+            <div id="measurementList" class="table-like"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="nutrition" class="view">
+        <div class="split">
+          <form id="foodForm" class="panel form-grid">
+            <h2>Besin Ekle</h2>
+            <label>Yediklerin<input id="foodText" placeholder="200g tavuk, 1 kase pilav" required></label>
+            <label>Öğün<select id="foodMeal"><option>Kahvaltı</option><option>Öğle</option><option>Akşam</option><option>Ara öğün</option></select></label>
+            <button class="primary" type="submit">Hesapla ve ekle</button>
+            <p class="hint">Yerel hesaplama; tavuk, yumurta, pilav, makarna, yulaf, süt, muz, yoğurt gibi temel besinleri tanır.</p>
+          </form>
+          <section class="panel">
+            <h2>Bugünün Makroları</h2>
+            <div id="macroBars" class="macro-bars"></div>
+            <div id="foodList" class="table-like"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="rank" class="view">
+        <div class="rank-layout">
+          <section class="panel rank-panel">
+            <div>
+              <p class="eyebrow">Mevcut rank</p>
+              <h2 id="rankName">Demir</h2>
+              <div class="rank-track"><span id="rankFill"></span></div>
+              <p id="rankNote" class="hint"></p>
+            </div>
+          </section>
+          <section class="panel">
+            <h2 id="rankDayTitle">Bugünkü Program</h2>
+            <div id="rankWorkoutList" class="workout-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="assistant" class="view">
+        <section class="panel assistant-panel">
+          <h2>AI Asistan</h2>
+          <div id="assistantLog" class="assistant-log"></div>
+          <form id="assistantForm" class="assistant-input">
+            <input id="assistantText" placeholder="Bugünkü performansım nasıl?">
+            <button class="primary" type="submit">Sor</button>
+          </form>
+        </section>
+      </section>
+
+      <section id="telegram" class="view">
+        <section class="panel">
+          <h2>Telegram Bot</h2>
+          <p class="hint">Telegram botu ayni backend hesabina veri yazar. Bot token aldiktan sonra backend acikken asagidaki komutla calistirabilirsin.</p>
+          <pre><code>python telegram-bot.py BOT_TOKEN</code></pre>
+          <div class="command-list">
+            <strong>Komutlar</strong>
+            <span>/start</span>
+            <span>/login email sifre</span>
+            <span>/rank</span>
+            <span>/kilo 82.4</span>
+            <span>/yemek 200g tavuk 1 kase pilav</span>
+            <span>/antrenman bench press 60kg 4x10</span>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Mobil menü">
+      <button class="nav-item active" data-view="dashboard" type="button">⌂<small>Ana</small></button>
+      <button class="nav-item" data-view="program" type="button">▦<small>Program</small></button>
+      <button class="nav-item" data-view="nutrition" type="button">◌<small>Besin</small></button>
+      <button class="nav-item" data-view="rank" type="button">◆<small>Rank</small></button>
+      <button class="nav-item" data-view="assistant" type="button">✦<small>AI</small></button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "FitRank OS",
+  "short_name": "FitRank",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1118",
+  "theme_color": "#10151f",
+  "icons": []
+}
